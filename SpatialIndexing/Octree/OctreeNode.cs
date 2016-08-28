@@ -31,12 +31,14 @@
 
         private List<OctreeNode<T>> children = new List<OctreeNode<T>>();
 
+        private OctreeNode<T> parent;
+
         // constructors
         public OctreeNode(CubeBounds bounds, int index, OctreeNode<T> parent = null)
-            : base()
         {
             this.Bounds = bounds;
             this.index = index;
+            this.parent = parent;
         }
 
         // methods

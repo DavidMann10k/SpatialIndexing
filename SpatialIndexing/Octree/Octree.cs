@@ -5,7 +5,7 @@ namespace SpatialIndexing.Octree
         public Octree(CubeBounds bounds, int height = 3)
         {
             this.Bounds = bounds;
-            this.root = new OctreeNode<T>(bounds, "");
+            this.root = new OctreeNode<T>(bounds, 0);
             this.Height = height;
         }
 

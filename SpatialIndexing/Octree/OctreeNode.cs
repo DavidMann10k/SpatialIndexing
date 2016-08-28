@@ -7,7 +7,7 @@
     /// </summary>
     internal class OctreeNode<T> : TreeNode<T>
     {
-        public OctreeNode(CubeBounds bounds, string index, OctreeNode<T> parent = null)
+        public OctreeNode(CubeBounds bounds, int index, OctreeNode<T> parent = null)
             : base()
         {
             this.Bounds = bounds;
@@ -19,7 +19,7 @@
             get { return (OctreeNode<T>)children[i]; }
         }
 
-        public string Index { get { return index; } }
+        public int Index { get { return index; } }
 
         public CubeBounds Bounds { get; private set; }
 
@@ -30,15 +30,23 @@
 			return this.Bounds.Contains (point);
         }
 
-        private string index;
+        private int index;
 
         public void Split ()
 		{
             for (int i = 0; i < 8; i++)
             {
-                children.Add(new OctreeNode<T>(new CubeBounds(GetOctantOrigin(i), this.OctantSize), GetChildId(i), this));
+                children.Add(new OctreeNode<T>(new CubeBounds(GetOctantOrigin(i), this.OctantSize), GetChildIndex(i), this));
             }
         }
+
+        private int GetChildIndex(int index)
+        {
+            var new_index = this.index << 3;
+            new_index |= index;
+            return new_index;
+        }
+
 
         public void Collapse()
         {
@@ -69,11 +77,6 @@
             }
             count += values.Count;
             return count;
-        }
-
-        private string GetChildId(int index)
-        {
-            return index + " " + Convert.ToString(index, 2).PadLeft(3, '0');
         }
 
         public OctreeNode<T> GetSmallestOctantContainingPoint(Vector point)

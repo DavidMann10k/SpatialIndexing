@@ -7,6 +7,20 @@
     /// </summary>
     internal class OctreeNode<T> : TreeNode<T>
     {
+        // indexes
+        public OctreeNode<T> this[int i] { get { return (OctreeNode<T>)children[i]; } }
+
+        // properties
+        public int Index { get { return index; } }
+
+        public CubeBounds Bounds { get; private set; }
+
+        public float OctantSize { get { return this.Bounds.Size / 2; } }
+
+        // fields
+        private int index;
+
+        // constructors
         public OctreeNode(CubeBounds bounds, int index, OctreeNode<T> parent = null)
             : base()
         {
@@ -14,23 +28,11 @@
             this.index = index;
         }
 
-        public OctreeNode<T> this[int i]
+        // methods
+        public bool Contains(Vector point)
         {
-            get { return (OctreeNode<T>)children[i]; }
+            return this.Bounds.Contains(point);
         }
-
-        public int Index { get { return index; } }
-
-        public CubeBounds Bounds { get; private set; }
-
-        public float OctantSize { get { return this.Bounds.Size / 2; } }
-
-        public bool Contains (Vector point)
-		{
-			return this.Bounds.Contains (point);
-        }
-
-        private int index;
 
         public void Split ()
 		{
@@ -39,14 +41,6 @@
                 children.Add(new OctreeNode<T>(new CubeBounds(GetOctantOrigin(i), this.OctantSize), GetChildIndex(i), this));
             }
         }
-
-        private int GetChildIndex(int index)
-        {
-            var new_index = this.index << 3;
-            new_index |= index;
-            return new_index;
-        }
-
 
         public void Collapse()
         {
@@ -58,7 +52,7 @@
             }
         }
 
-        internal int CountNodes()
+        public int CountNodes()
         {
             var count = 0;
             foreach (OctreeNode<T> child in children)
@@ -79,76 +73,12 @@
             return count;
         }
 
-        public OctreeNode<T> GetSmallestOctantContainingPoint(Vector point)
-        {
-            if (this.IsLeaf)
-            {
-                return this;
-            }
-            else
-            {
-                int index = 0;
-                if (point.x >= this.Bounds.Origin.x)
-                {
-                    index |= 4;
-                }
-
-                if (point.y >= this.Bounds.Origin.y)
-                {
-                    index |= 2;
-                }
-
-                if (point.z >= this.Bounds.Origin.z)
-                {
-                    index |= 1;
-                }
-
-                if (children[index].IsLeaf)
-                {
-                    return (OctreeNode<T>)this.children[index];
-                }
-                else
-                {
-                    return ((OctreeNode<T>)this.children[index]).GetSmallestOctantContainingPoint(point);
-                }
-            }
-        }
-
         public OctreeNode<T> GetChildContainingPoint(Vector point)
         {
             if (!this.Contains(point))
                 return null;
-
-            if (this.IsLeaf)
-            {
-                Split();
-                return GetChildContainingPoint(point);
-            }
-            else
-            {
-                return (OctreeNode<T>)this.children[GetOctantIndex(point)];
-            }
-        }
-
-        private int GetOctantIndex(Vector point)
-        {
-            int index = 0;
-            if (point.x >= this.Bounds.Origin.x)
-            {
-                index |= 4;
-            }
-
-            if (point.y >= this.Bounds.Origin.y)
-            {
-                index |= 2;
-            }
-
-            if (point.z >= this.Bounds.Origin.z)
-            {
-                index |= 1;
-            }
-
-            return index;
+            
+            return (OctreeNode<T>)this.children[GetOctantIndexContainingPoint(point)];
         }
 
         public void PerformOperation(iOperation<T> op)
@@ -163,6 +93,50 @@
 			origin.y += Bounds.Extents.y * (Convert.ToBoolean (index & 2) ? .5f : -.5f);
 			origin.z += Bounds.Extents.z * (Convert.ToBoolean (index & 1) ? .5f : -.5f);
 			return origin;
-		}
-	}
+        }
+
+        // private methods
+        private int GetOctantIndexContainingPoint(Vector point)
+        {
+            int index = 0;
+            if (point.x >= this.Bounds.Origin.x)
+                index |= 4;
+
+            if (point.y >= this.Bounds.Origin.y)
+                index |= 2;
+
+            if (point.z >= this.Bounds.Origin.z)
+                index |= 1;
+
+            return index;
+        }
+
+        private int GetChildIndex(int index)
+        {
+            var new_index = this.index << 3;
+            new_index |= index;
+            return new_index;
+        }
+
+        //public OctreeNode<T> GetSmallestOctantContainingPoint(Vector point)
+        //{
+        //    if (this.IsLeaf)
+        //    {
+        //        return this;
+        //    }
+        //    else
+        //    {
+        //       var i = GetOctantIndexContainingPoint(point);
+
+        //        if (children[i].IsLeaf)
+        //        {
+        //            return (OctreeNode<T>)this.children[i];
+        //        }
+        //        else
+        //        {
+        //            return ((OctreeNode<T>)this.children[i]).GetSmallestOctantContainingPoint(point);
+        //        }
+        //    }
+        //}
+    }
 }

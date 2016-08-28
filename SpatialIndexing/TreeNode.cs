@@ -6,11 +6,7 @@ namespace SpatialIndexing
 
     internal abstract class TreeNode<T>
     {
-        public TreeNode(TreeNode<T> parent = null)
-        {
-            this.Parent = parent;
-        }
-
+        // properties
         public TreeNode<T> Parent { get; private set; }
 
         public List<T> Values { get { return values; } }
@@ -36,8 +32,15 @@ namespace SpatialIndexing
 
         public List<TreeNode<T>> Children { get { return children; } }
 
+        // fields
         protected List<TreeNode<T>> children = new List<TreeNode<T>>();
 
-        protected List<T> values = new List<T>();        
+        protected List<T> values = new List<T>();
+
+        // constructors
+        public TreeNode(TreeNode<T> parent = null)
+        {
+            this.Parent = parent;
+        }
     }
 }

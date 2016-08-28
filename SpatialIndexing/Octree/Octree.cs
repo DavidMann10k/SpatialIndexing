@@ -2,27 +2,30 @@ namespace SpatialIndexing.Octree
 {
     public class Octree<T>
     {
-        public Octree(CubeBounds bounds, int height = 3)
+        // properties
+        public CubeBounds Bounds { get; private set; }
+        public int MaxValuesPerNode { get; private set; }
+
+        // fields
+        private OctreeNode<T> root;
+        
+        // constructors
+        public Octree(CubeBounds bounds)
         {
             this.Bounds = bounds;
             this.root = new OctreeNode<T>(bounds, 0);
-            this.Height = height;
+            this.MaxValuesPerNode = 8;
         }
 
-		public CubeBounds Bounds { get; private set; }
-
-		public int Height { get; private set; }
-
-        private OctreeNode<T> root;
-
+        // methods
         public bool Contains (Vector point)
-		{
-			return this.Bounds.Contains (point);
-		}
+        {
+            return this.Bounds.Contains (point);
+        }
 
         public void AddValue(Vector position, T value)
         {
-            AddValueOperation<T> op = new AddValueOperation<T>(position, value, Height);
+            AddValueOperation<T> op = new AddValueOperation<T>(this, position, value);
             root.PerformOperation(op);
         }
 

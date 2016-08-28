@@ -4,34 +4,29 @@ namespace SpatialIndexing.Octree
 {
     internal class AddValueOperation<T> : iOperation<T>
     {
-        public AddValueOperation(Vector position, T value, int minimum_height)
+
+        public AddValueOperation(Octree<T> octree,  Vector position, T value)
         {
             this.Position = position;
             this.Value = value;
-            this.Height = minimum_height;
-            Level = 0;
+            this.octree = octree;
         }
 
-        public AddValueOperation(Vector position, T value)
-        {
-            this.Position = position;
-            this.Value = value;
-            Level = 0;
-        }
-
-        public Vector Position;
-        public T Value;
-        public int Height;
-        public int Level;
+        private Octree<T> octree;
+        private Vector Position;
+        private T Value;
 
         public void Execute(OctreeNode<T> node)
         {
             if (!node.Contains(Position))
                 throw new Exception("Point outside of octree node bounds.");
 
-            if (Level < Height)
+            if (node.Values.Count >= octree.MaxValuesPerNode)
             {
-                Level++;
+                if (node.IsLeaf)
+                {
+                    node.Split();
+                }
 
                 var octant = node.GetChildContainingPoint(Position);
                 octant.PerformOperation(this);

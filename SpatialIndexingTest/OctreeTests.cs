@@ -14,7 +14,6 @@ namespace SpatialIndexingTest
             var bounds = new CubeBounds(new Vector(0, 0, 0), 2);
             var octree = new Octree<string>(bounds);
             
-            Assert.AreEqual<int>(3, octree.Height);
             Assert.AreEqual<Vector>(new Vector(0, 0, 0), octree.Bounds.Origin);
             Assert.AreEqual<float>(2, octree.Bounds.Size);
             Assert.IsTrue(octree.Contains(Vector.Zero));

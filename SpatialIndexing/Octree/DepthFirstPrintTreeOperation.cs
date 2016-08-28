@@ -6,7 +6,7 @@ namespace SpatialIndexing.Octree
     {
         public void Execute(OctreeNode<T> node)
         {
-            Console.WriteLine("Node" + Convert.ToString(node.Index, 2) + " Nodes: " + node.CountNodes());
+            Console.WriteLine(String.Format("Node #{0} Nodes: {1} Values: {2}", node.Index, node.CountNodes(), node.CountValues()));
             //foreach (T value in node.Values)
             //{
             //    Console.WriteLine(value.ToString());

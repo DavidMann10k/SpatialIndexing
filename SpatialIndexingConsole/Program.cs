@@ -9,7 +9,7 @@ namespace SpatialIndexingConsole
         static void Main(string[] args)
         {
             var bounds = new CubeBounds(Vector.Zero, 2);
-            var octree = new Octree<string>(bounds, 15);
+            var octree = new Octree<string>(bounds);
 
             for (int i = 0; i < 100; i++)
             {

@@ -1,11 +1,12 @@
 ﻿namespace SpatialIndexing.Octree
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Node used in an octree.
     /// </summary>
-    internal class OctreeNode<T> : TreeNode<T>
+    internal class OctreeNode<T>
     {
         // indexes
         public OctreeNode<T> this[int i] { get { return (OctreeNode<T>)children[i]; } }
@@ -17,8 +18,18 @@
 
         public float OctantSize { get { return this.Bounds.Size / 2; } }
 
+        public Dictionary<Vector, T> Values { get { return this.values; } }
+
+        public bool IsLeaf { get { return children.Count <= 0; } }
+
+        public List<OctreeNode<T>> Children { get { return children; } }
+
         // fields
         private int index;
+
+        private Dictionary<Vector, T> values = new Dictionary<Vector, T>();
+
+        private List<OctreeNode<T>> children = new List<OctreeNode<T>>();
 
         // constructors
         public OctreeNode(CubeBounds bounds, int index, OctreeNode<T> parent = null)
@@ -47,7 +58,11 @@
             foreach(OctreeNode<T> child in children)
             {
                 child.Collapse();
-                values.AddRange(child.values);
+                foreach(var pair in child.values)
+                {
+                    values.Add(pair.Key, pair.Value);
+                }
+                
                 children.Clear();
             }
         }
@@ -85,8 +100,9 @@
         {
             op.Execute(this);
         }
-
-        public Vector GetOctantOrigin (int index)
+        
+        // private methods
+        private Vector GetOctantOrigin (int index)
 		{
 			var origin = this.Bounds.Origin;
 			origin.x += Bounds.Extents.x * (Convert.ToBoolean (index & 4) ? .5f : -.5f);
@@ -95,7 +111,6 @@
 			return origin;
         }
 
-        // private methods
         private int GetOctantIndexContainingPoint(Vector point)
         {
             int index = 0;

@@ -1,26 +1,25 @@
 ﻿namespace SpatialIndexing.Octree
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
+    using System;
 
-	/// <summary>
-	/// Node used in an octree.
-	/// </summary>
-	internal class OctreeNode<T> : TreeNode<T>
+    /// <summary>
+    /// Node used in an octree.
+    /// </summary>
+    internal class OctreeNode<T> : TreeNode<T>
     {
-        public string id;
-        public OctreeNode(CubeBounds bounds, string id, OctreeNode<T> parent = null)
+        public OctreeNode(CubeBounds bounds, string index, OctreeNode<T> parent = null)
             : base()
         {
             this.Bounds = bounds;
-            this.id = id;
+            this.index = index;
         }
 
         public OctreeNode<T> this[int i]
         {
             get { return (OctreeNode<T>)children[i]; }
         }
+
+        public string Index { get { return index; } }
 
         public CubeBounds Bounds { get; private set; }
 
@@ -29,9 +28,11 @@
         public bool Contains (Vector point)
 		{
 			return this.Bounds.Contains (point);
-		}
+        }
 
-		public void Split ()
+        private string index;
+
+        public void Split ()
 		{
             for (int i = 0; i < 8; i++)
             {
@@ -39,9 +40,40 @@
             }
         }
 
+        public void Collapse()
+        {
+            foreach(OctreeNode<T> child in children)
+            {
+                child.Collapse();
+                values.AddRange(child.values);
+                children.Clear();
+            }
+        }
+
+        internal int CountNodes()
+        {
+            var count = 0;
+            foreach (OctreeNode<T> child in children)
+            {
+                count += child.CountNodes();
+            }
+            return ++count;
+        }
+
+        public int CountValues()
+        {
+            var count = 0;
+            foreach (OctreeNode<T> child in children)
+            {
+                count += child.CountValues();
+            }
+            count += values.Count;
+            return count;
+        }
+
         private string GetChildId(int index)
         {
-            return id + " " + Convert.ToString(index, 2).PadLeft(3, '0');
+            return index + " " + Convert.ToString(index, 2).PadLeft(3, '0');
         }
 
         public OctreeNode<T> GetSmallestOctantContainingPoint(Vector point)
@@ -116,7 +148,7 @@
             return index;
         }
 
-        public void PerformOperation(Operation<T> op)
+        public void PerformOperation(iOperation<T> op)
         {
             op.Execute(this);
         }

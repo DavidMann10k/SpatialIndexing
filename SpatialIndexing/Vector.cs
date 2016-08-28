@@ -1,8 +1,12 @@
-﻿namespace SpatialIndexing
+﻿using System;
+
+namespace SpatialIndexing
 {
 	public struct Vector
-	{
-		public float x;
+    {
+        public static Random rand = new Random();
+
+        public float x;
 
 		public float y;
 
@@ -27,6 +31,11 @@
         public override string ToString()
         {
             return string.Format("{0} ({1}, {2}, {3})", base.ToString(), x, y, z);
+        }
+        
+        public static Vector Random()
+        {
+            return new Vector((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble());
         }
     }
 }

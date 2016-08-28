@@ -1,11 +1,6 @@
 namespace SpatialIndexing.Octree
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics;
-	using System.Linq;
-
-	public class Octree<T>
+    public class Octree<T>
     {
         public Octree(CubeBounds bounds, int height = 3)
         {
@@ -35,5 +30,15 @@ namespace SpatialIndexing.Octree
         {
             root.PerformOperation(new DepthFirstPrintTreeOperation<T>());
         }
-	}
+
+        public int CountValues()
+        {
+            return root.CountValues();
+        }
+
+        public int CountNodes()
+        {
+            return root.CountNodes();
+        }
+    }
 }

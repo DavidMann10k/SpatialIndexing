@@ -2,13 +2,20 @@
 
 namespace SpatialIndexing.Octree
 {
-    internal struct AddValueOperation<T> : Operation<T>
+    internal class AddValueOperation<T> : iOperation<T>
     {
-        public AddValueOperation(Vector position, T value, int height)
+        public AddValueOperation(Vector position, T value, int minimum_height)
         {
             this.Position = position;
             this.Value = value;
-            this.Height = height;
+            this.Height = minimum_height;
+            Level = 0;
+        }
+
+        public AddValueOperation(Vector position, T value)
+        {
+            this.Position = position;
+            this.Value = value;
             Level = 0;
         }
 

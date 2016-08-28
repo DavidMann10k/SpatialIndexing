@@ -100,5 +100,21 @@ namespace SpatialIndexingTest
             octree.AddValue(Vector.One * -1, "fo");
             octree.AddValue(Vector.One, "fum");
         }
+
+        [TestMethod]
+        public void CountValues()
+        {
+            var bounds = new CubeBounds(new Vector(0, 0, 0), 2);
+            var octree = new Octree<string>(bounds);
+
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                octree.AddValue(Vector.Random(), "beer");
+            }
+
+            Assert.AreEqual(100, octree.CountValues());
+        }
     }
 }

@@ -45,8 +45,8 @@
     <Compile Include="Octree\Octree.cs" />
     <Compile Include="Octree\OctreeNode.cs" />
     <Compile Include="Octree\AddValueOperation.cs" />
-    <Compile Include="Octree\Operation.cs" />
-    <Compile Include="Octree\PrintTreeOperation.cs" />
+    <Compile Include="Octree\iOperation.cs" />
+    <Compile Include="Octree\DepthFirstPrintTreeOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="Vector.cs" />

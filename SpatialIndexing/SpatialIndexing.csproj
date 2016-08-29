@@ -40,11 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CubeBounds.cs" />
+    <Compile Include="Octree\BoundsRetrieval.cs" />
+    <Compile Include="Octree\FindValueNearestPointOperation.cs" />
+    <Compile Include="Octree\IRetrieval.cs" />
     <Compile Include="Octree\Octree.cs" />
     <Compile Include="Octree\OctreeNode.cs" />
     <Compile Include="Octree\AddValueOperation.cs" />
-    <Compile Include="Octree\iOperation.cs" />
+    <Compile Include="Octree\IOperation.cs" />
     <Compile Include="Octree\DepthFirstPrintTreeOperation.cs" />
+    <Compile Include="Octree\VectorValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="Vector.cs" />

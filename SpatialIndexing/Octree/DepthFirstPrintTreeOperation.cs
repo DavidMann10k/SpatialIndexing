@@ -2,15 +2,20 @@
 
 namespace SpatialIndexing.Octree
 {
-    internal class DepthFirstPrintTreeOperation<T> : iOperation<T>
+    internal class DepthFirstPrintTreeOperation<T> : IOperation<T>
     {
         public void Execute(OctreeNode<T> node)
         {
-            Console.WriteLine(String.Format("Node #{0} Nodes: {1} Values: {2}", node.Index, node.CountNodes(), node.CountValues()));
+            if (node.IsRoot)
+                Console.Write("Root Node, ");
+            else
+                Console.Write(String.Format("#{0}, ", node.Index));
+
+            Console.WriteLine(String.Format("descendants: {0}, decendent values: {1}", node.DescendantCount(), node.DescendantValueCount()));
 
             foreach(OctreeNode<T> child in node.Children)
             {
-                child.PerformOperation(this);
+                child.ExecuteOperation(this);
             }
         }
     }

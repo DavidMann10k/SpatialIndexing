@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace SpatialIndexing.Octree
 {
     public class Octree<T>
@@ -26,22 +29,38 @@ namespace SpatialIndexing.Octree
         public void AddValue(Vector position, T value)
         {
             AddValueOperation<T> op = new AddValueOperation<T>(this, position, value);
-            root.PerformOperation(op);
+            root.ExecuteOperation(op);
         }
 
         public void PrintTree()
         {
-            root.PerformOperation(new DepthFirstPrintTreeOperation<T>());
+            root.ExecuteOperation(new DepthFirstPrintTreeOperation<T>());
+        }
+
+        public List<T> GetValues(CubeBounds bounds)
+        {
+            var retrieval = new BoundsRetrieval<T>(bounds);
+            return root.ExecuteRetrieval(retrieval);
         }
 
         public int CountValues()
         {
-            return root.CountValues();
+            return root.DescendantValueCount();
         }
 
         public int CountNodes()
         {
-            return root.CountNodes();
+            return root.DescendantCount();
+        }
+
+        public bool Intersects(CubeBounds bounds)
+        {
+            return this.Bounds.Intersects(bounds);
+        }
+
+        public object Contains(T value)
+        {
+            return root.Contains(value);
         }
     }
 }

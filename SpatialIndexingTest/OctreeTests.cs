@@ -24,34 +24,37 @@ namespace SpatialIndexingTest
         {
             var bounds = new CubeBounds(new Vector(0, 0, 0), 2);
             var octree = new Octree<string>(bounds);
-            
+
+            // positive sides have inclusive borders
             Assert.IsTrue(octree.Contains(new Vector(0, 0, 0)));
             Assert.IsTrue(octree.Contains(new Vector(0, 0, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(0, 0, -1)));
             Assert.IsTrue(octree.Contains(new Vector(0, 1, 0)));
             Assert.IsTrue(octree.Contains(new Vector(0, 1, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(0, 1, -1)));
-            Assert.IsTrue(octree.Contains(new Vector(0, -1, 0)));
-            Assert.IsTrue(octree.Contains(new Vector(0, -1, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(0, -1, -1)));
             Assert.IsTrue(octree.Contains(new Vector(1, 0, 0)));
             Assert.IsTrue(octree.Contains(new Vector(1, 0, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(1, 0, -1)));
             Assert.IsTrue(octree.Contains(new Vector(1, 1, 0)));
             Assert.IsTrue(octree.Contains(new Vector(1, 1, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(1, 1, -1)));
-            Assert.IsTrue(octree.Contains(new Vector(1, -1, 0)));
-            Assert.IsTrue(octree.Contains(new Vector(1, -1, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(1, -1, -1)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, 0, 0)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, 0, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, 0, -1)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, 1, 0)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, 1, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, 1, -1)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, -1, 0)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, -1, 1)));
-            Assert.IsTrue(octree.Contains(new Vector(-1, -1, -1)));
+
+            // negative sides have exclusive borders
+            Assert.IsFalse(octree.Contains(new Vector(-1, 0, 0)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, 0, 1)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, 1, 0)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, 1, 1)));
+            Assert.IsFalse(octree.Contains(new Vector(0, 0, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(0, 1, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(0, -1, 0)));
+            Assert.IsFalse(octree.Contains(new Vector(0, -1, 1)));
+            Assert.IsFalse(octree.Contains(new Vector(0, -1, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(1, 0, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(1, 1, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(1, -1, 0)));
+            Assert.IsFalse(octree.Contains(new Vector(1, -1, 1)));
+            Assert.IsFalse(octree.Contains(new Vector(1, -1, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, 0, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, 1, -1)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, -1, 0)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, -1, 1)));
+            Assert.IsFalse(octree.Contains(new Vector(-1, -1, -1)));
         }
 
         [TestMethod]
@@ -89,15 +92,16 @@ namespace SpatialIndexingTest
         }
 
         [TestMethod]
-        public void AddValues()
+        public void ContainsValues()
         {
             var bounds = new CubeBounds(new Vector(0, 0, 0), 2);
             var octree = new Octree<string>(bounds);
 
             octree.AddValue(Vector.Zero, "fee");
             octree.AddValue(Vector.One, "fi");
-            octree.AddValue(Vector.One * -1, "fo");
-            octree.AddValue(Vector.One, "fum");
+
+            Assert.IsNotNull(octree.Contains("fee"));
+            Assert.IsNotNull(octree.Contains("fi"));
         }
 
         [TestMethod]
@@ -106,14 +110,23 @@ namespace SpatialIndexingTest
             var bounds = new CubeBounds(new Vector(0, 0, 0), 2);
             var octree = new Octree<string>(bounds);
 
-
-
             for (int i = 0; i < 100; i++)
             {
                 octree.AddValue(Vector.Random(), "beer");
             }
 
             Assert.AreEqual(100, octree.CountValues());
+        }
+
+        [TestMethod]
+        public void Intersection()
+        {
+            var bounds = new CubeBounds(Vector.Zero, 2);
+            var octree = new Octree<string>(bounds);
+
+            Assert.IsTrue(bounds.Intersects(new CubeBounds(Vector.Zero, 2)));
+            Assert.IsTrue(bounds.Intersects(new CubeBounds(Vector.One, 1)));
+            Assert.IsTrue(bounds.Intersects(new CubeBounds(new Vector(2,2,2), 2)));
         }
     }
 }

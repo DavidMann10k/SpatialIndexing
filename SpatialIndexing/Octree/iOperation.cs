@@ -1,6 +1,7 @@
 ﻿namespace SpatialIndexing.Octree
 {
-    internal interface iOperation<T>
+    // TODO: make internal
+    public interface IOperation<T>
     {
         void Execute(OctreeNode<T> node);
     }

@@ -11,6 +11,9 @@ namespace SpatialIndexing.Octree
 
         // fields
         private OctreeNode<T> root;
+        private List<VectorValue<T>> values = new List<VectorValue<T>>(100);
+        private DepthFirstPrintTreeOperation<T> printOp = new DepthFirstPrintTreeOperation<T>();
+        private AddValueOperation<T> AddOp = new AddValueOperation<T>();
         
         // constructors
         public Octree(CubeBounds bounds)
@@ -29,18 +32,17 @@ namespace SpatialIndexing.Octree
         public void AddValue(Vector position, T value)
         {
             AddValueOperation<T> op = new AddValueOperation<T>(this, position, value);
-            root.ExecuteOperation(op);
+            root.ExecuteOperation(op, this.values);
         }
 
         public void PrintTree()
         {
-            root.ExecuteOperation(new DepthFirstPrintTreeOperation<T>());
+            root.ExecuteOperation(printOp, values);
         }
 
         public List<T> GetValues(CubeBounds bounds)
         {
-            var retrieval = new BoundsRetrieval<T>(bounds);
-            return root.ExecuteRetrieval(retrieval);
+            return null;
         }
 
         public int CountValues()

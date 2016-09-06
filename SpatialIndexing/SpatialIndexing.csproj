@@ -42,7 +42,6 @@
     <Compile Include="CubeBounds.cs" />
     <Compile Include="Octree\BoundsRetrieval.cs" />
     <Compile Include="Octree\FindValueNearestPointOperation.cs" />
-    <Compile Include="Octree\IRetrieval.cs" />
     <Compile Include="Octree\Octree.cs" />
     <Compile Include="Octree\OctreeNode.cs" />
     <Compile Include="Octree\AddValueOperation.cs" />

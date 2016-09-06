@@ -5,25 +5,21 @@ using System.Text;
 
 namespace SpatialIndexing.Octree
 {
-    class BoundsRetrieval<T> : IRetrieval<T>
+    class GetValuesInBounds<T> : IOperation<T>
     {
         public CubeBounds bounds { get; private set; }
 
-        public BoundsRetrieval(CubeBounds bounds)
+        public GetValuesInBounds(CubeBounds bounds)
         {
             this.bounds = bounds;
         }
 
-        public List<T> Execute(OctreeNode<T> node)
+        public void Execute(OctreeNode<T> node, List<VectorValue<T>> values)
         {
-            var values = new List<T>();
-
             if (node.Bounds.Intersects(this.bounds))
             {
                 
             }
-
-            return values;
         }
     }
 }

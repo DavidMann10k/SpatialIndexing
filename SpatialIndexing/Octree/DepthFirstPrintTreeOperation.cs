@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SpatialIndexing.Octree
 {
     internal class DepthFirstPrintTreeOperation<T> : IOperation<T>
     {
-        public void Execute(OctreeNode<T> node)
+        public void Execute(OctreeNode<T> node, List<VectorValue<T>> values)
         {
             if (node.IsRoot)
                 Console.Write("Root Node, ");
@@ -15,7 +16,7 @@ namespace SpatialIndexing.Octree
 
             foreach(OctreeNode<T> child in node.Children)
             {
-                child.ExecuteOperation(this);
+                child.ExecuteOperation(this, values);
             }
         }
     }

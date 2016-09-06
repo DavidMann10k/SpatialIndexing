@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SpatialIndexing.Octree
 {
@@ -14,10 +11,12 @@ namespace SpatialIndexing.Octree
 
         Vector point;
 
-        public void Execute(OctreeNode<T> node)
+        public void Execute(OctreeNode<T> node, List<VectorValue<T>> values)
         {
+            values.Clear();
+
             var containing_node = node.GetLeafContaininPoint(point);
-            var values = containing_node.Values;
+            values = containing_node.Values;
 
             var size = containing_node.Size;
 

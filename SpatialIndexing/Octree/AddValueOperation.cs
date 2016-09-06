@@ -1,43 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SpatialIndexing.Octree
 {
     internal class AddValueOperation<T> : IOperation<T>
     {
 
-        public AddValueOperation(Octree<T> octree,  Vector position, T value)
+        public AddValueOperation(Octree<T> octree)
         {
-            this.position = position;
-            this.Value = value;
             this.octree = octree;
         }
 
         private Octree<T> octree;
-        private Vector position;
-        private T Value;
 
-        public void Execute(OctreeNode<T> node)
+        public void Execute(OctreeNode<T> node, List<VectorValue<T>> values)
         {
-            if (!node.Bounds.Contains(position))
-                throw new Exception("Point outside of octree node bounds.");
-
-            if (node.Values.Count >= octree.MaxValuesPerNode)
+            if (node.IsLeaf)
             {
-                if (node.IsLeaf)
-                {
-                    node.Split();
-                    foreach(var value in node.Values)
-                    {
-
-                    }
-                }
-
-                var octant = node.GetChildContainingPoint(position);
-                octant.ExecuteOperation(this);
+                // add values to this node
+                // split if values.count > octree.maxValuesPerNode
+            
             }
             else
             {
-                node.Values.Add(new VectorValue<T>(position, Value));
+                // execute AddValueOperation on each child with values
             }
         }
     }

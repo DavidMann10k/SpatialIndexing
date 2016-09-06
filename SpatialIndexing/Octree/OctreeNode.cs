@@ -112,14 +112,9 @@
             return (OctreeNode<T>)this.children[GetOctantIndexContainingPoint(point)];
         }
 
-        public void ExecuteOperation(IOperation<T> op)
+        public void ExecuteOperation(IOperation<T> op, List<VectorValue<T>> values)
         {
-            op.Execute(this);
-        }
-
-        public List<T> ExecuteRetrieval(IRetrieval<T> op)
-        {
-            return op.Execute(this);
+            op.Execute(this, values);
         }
 
         public OctreeNode<T> GetLeafContaininPoint(Vector point)
